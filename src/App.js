@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ApolloClientProvider } from './ApolloClient'; // Import Apollo Client Provider
+import ProductListPage from './pages/ProductListPage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import Cart from './components/Cart';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <ApolloClientProvider>
+        <Router>
+          <div>
+            <h1>Hello there is ...... </h1>
+            <Cart></Cart>
+            <ProductListPage></ProductListPage>
+            <Routes>
+              <Route path="/" exact component={ProductListPage} />
+              <Route path="/product/:id" component={ProductDetailPage} />
+              <Route path="/cart" component={Cart} />
+            </Routes>
+          </div>
+        </Router>
+      </ApolloClientProvider>
+    );
+  }
 }
 
 export default App;
