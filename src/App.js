@@ -37,7 +37,7 @@ class App extends Component {
         {/* <Router> */}
           <Header cartItems={cartItems} onCategoryChange={this.handleCategoryChange} />
           <div>
-            <h1>Hello there is ...... </h1>
+            
             <Routes>
             <Route path="/" element={<ProductListPage addToCart={this.addToCart} activeCategory={activeCategory} />} />
               <Route path="/product/:id" element={<ProductDetailPage/>} />

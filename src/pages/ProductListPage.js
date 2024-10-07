@@ -48,7 +48,10 @@ class ProductListPage extends Component {
 
     return (
       <div className="container mx-auto p-5">
-        list page is here
+        <h1 className="text-5xl font-bold my-6 text-start ml-3">
+  {activeCategory.toUpperCase()}
+</h1>
+
         <Query query={GET_PRODUCTS}>
           {({ loading, error, data }) => {
             if (loading) return <p>Loading...</p>;
