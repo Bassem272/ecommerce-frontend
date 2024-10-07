@@ -1,31 +1,116 @@
+
 import React, { Component } from 'react';
 import { gql } from '@apollo/client';
 import { Query } from '@apollo/client/react/components';
-import ProductDetail from '../components/ProductDetail';
+import VerticalCarousel from './../components/VerticalCarousel';
+import MainImage from './../components/MainImage';
+import ProductAttributes from './../components/ProductAttributes';
+import { withParams } from '../hoc/WithParams'; 
+import parse from "html-react-parser";
 
 const GET_PRODUCT = gql`
-  query GetProduct($id: ID!) {
+  query ($id: String!) {
     product(id: $id) {
       id
       name
-      price
-      colors
-      sizes
-      imageUrl
+      description
+      inStock
+      category_id
+      brand
+      gallery {
+        product_id
+        image_url
+      }
+      price {
+        product_id
+        amount
+      }
+      attributes {
+        id
+        name
+        type 
+        attribute_items {
+          id
+          displayValue
+          value
+        }
+      }
     }
   }
 `;
 
 class ProductDetailPage extends Component {
-  handleAddToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push(product);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    console.log('Added to cart');
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedAttributes: {},
+      isAddToCartEnabled: false,
+      currentImageIndex: 0 // Track the currently selected image index
+    };
   }
 
+  handleImageSelect = (imageUrl, gallery) => {
+    // Ensure gallery exists
+    if (!gallery) return;
+
+    const selectedIndex = gallery.findIndex(image => image.image_url === imageUrl);
+    if (selectedIndex !== -1) {
+      this.setState({ currentImageIndex: selectedIndex });
+    }
+  };
+
+  nextImage = (gallery) => {
+    // Ensure gallery exists
+    if (!gallery) return;
+
+    this.setState((prevState) => ({
+      currentImageIndex: (prevState.currentImageIndex + 1) % gallery.length
+    }));
+  };
+
+  prevImage = (gallery) => {
+    // Ensure gallery exists
+    if (!gallery) return;
+
+    this.setState((prevState) => ({
+      currentImageIndex: (prevState.currentImageIndex - 1 + gallery.length) % gallery.length
+    }));
+  };
+
+  handleAttributeSelection = (selectedAttributes) => {
+    this.setState({
+      selectedAttributes,
+      isAddToCartEnabled: true // Enable Add to Cart button
+    });
+  };
+
+  handleAddToCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const { selectedAttributes } = this.state;
+
+    const productInCartIndex = cart.findIndex(
+      (item) =>
+        item.id === product.id &&
+        JSON.stringify(item.selectedAttributes) === JSON.stringify(selectedAttributes)
+    );
+
+    if (productInCartIndex !== -1) {
+      cart[productInCartIndex].quantity += 1;
+    } else {
+      cart.push({
+        ...product,
+        selectedAttributes: { ...selectedAttributes },
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    console.log("cart", cart)
+  };
+
   render() {
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
+    const { currentImageIndex, isAddToCartEnabled } = this.state;
 
     return (
       <Query query={GET_PRODUCT} variables={{ id }}>
@@ -34,16 +119,57 @@ class ProductDetailPage extends Component {
           if (error) return <p>Error: {error.message}</p>;
 
           const product = data.product;
+          const gallery = product?.gallery || []; // Ensure gallery is available
+
+          // Early return if product is not defined
+          if (!product) {
+            return <p>Product not found.</p>;
+          }
 
           return (
-            <div>
-              <ProductDetail product={product} />
-              <button 
-                className="bg-blue-500 text-white px-4 py-2 mt-4" 
-                onClick={() => this.handleAddToCart(product)}
-              >
-                Add to Cart
-              </button>
+            <div className="grid grid-cols-3 gap-6 p-8">
+              <div className="col-span-2 grid grid-cols-5 gap-4">
+                {/* Vertical Image Carousel */}
+                <VerticalCarousel
+                  gallery={gallery}
+                  onSelectImage={(imageUrl) => this.handleImageSelect(imageUrl, gallery)} // Pass gallery to handler
+                  selectedImage={gallery[currentImageIndex]?.image_url} // Highlight the selected image
+                />
+
+                {/* Main Image with Arrows */}
+                <MainImage
+                  gallery={gallery}
+                  currentImageIndex={currentImageIndex}
+                  nextImage={() => this.nextImage(gallery)} // Pass gallery to next/prev handlers
+                  prevImage={() => this.prevImage(gallery)}
+                />
+              </div>
+
+              <div className="col-span-1">
+                <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
+
+                <ProductAttributes
+                  attributes={product.attributes}
+                  onAttributeChange={this.handleAttributeSelection}
+                />
+
+                <p className="text-xl font-semibold my-4">
+                  ${product.price[0].amount.toFixed(2)}
+                </p>
+
+                <button
+                  className={`bg-green-500 text-white px-4 py-2 mt-4 w-full ${!isAddToCartEnabled ? 'disabled opacity-50' : ''} hover:bg-green-400`}
+                  onClick={() => this.handleAddToCart(product)}
+                  disabled={!isAddToCartEnabled}
+                >
+                  {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                </button>
+
+                <div className="mt-6">
+                  <h2 className="text-lg font-bold mb-2">Description</h2>
+                  <div>{parse(product.description)}</div>
+                </div>
+              </div>
             </div>
           );
         }}
@@ -52,4 +178,4 @@ class ProductDetailPage extends Component {
   }
 }
 
-export default ProductDetailPage;
+export default withParams(ProductDetailPage);

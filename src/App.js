@@ -1,26 +1,51 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 import { ApolloClientProvider } from './ApolloClient'; // Import Apollo Client Provider
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import Cart from './components/Cart';
-
+import Header from './components/shared/Header';
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cartItems: [],
+      activeCategory: 'All', // New state for active category
+    };
+  }
+
+  componentDidMount() {
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    this.setState({ cartItems });
+  }
+
+  addToCart = (product) => {
+    const { cartItems } = this.state;
+    const updatedCart = [...cartItems, product];
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    this.setState({ cartItems: updatedCart });
+  };
+
+  handleCategoryChange = (category) => {
+    this.setState({ activeCategory: category }); // Update active category state
+  }; 
+
   render() {
+    const { cartItems, activeCategory } = this.state;
     return (
       <ApolloClientProvider>
-        <Router>
+         <BrowserRouter>
+        {/* <Router> */}
+          <Header cartItems={cartItems} onCategoryChange={this.handleCategoryChange} />
           <div>
             <h1>Hello there is ...... </h1>
-            <Cart></Cart>
-            <ProductListPage></ProductListPage>
             <Routes>
-              <Route path="/" exact component={ProductListPage} />
-              <Route path="/product/:id" component={ProductDetailPage} />
-              <Route path="/cart" component={Cart} />
+            <Route path="/" element={<ProductListPage addToCart={this.addToCart} activeCategory={activeCategory} />} />
+              <Route path="/product/:id" element={<ProductDetailPage/>} />
+              
             </Routes>
           </div>
-        </Router>
+        {/* </Router> */}
+         </BrowserRouter>
       </ApolloClientProvider>
     );
   }
