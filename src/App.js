@@ -22,12 +22,12 @@ class App extends Component {
     // const { cartItems } = this.state;
 
     const cartItems = JSON.parse(localStorage.getItem('cart'))
-    console.log('add_tocart_before_cart', cartItems)
+    // console.log('add_tocart_before_cart', cartItems)
     const updatedCart = [...cartItems, product];
     localStorage.setItem('cart', JSON.stringify(updatedCart));
-    console.log('add_tocart', updatedCart)
+    // console.log('add_tocart', updatedCart)
     this.setState({ cartItems: updatedCart });
-    console.log('added_setstate', updatedCart)
+    // console.log('added_setstate', updatedCart)
   };
 
   handleCategoryChange = (category) => {
@@ -38,9 +38,15 @@ class App extends Component {
     const { cartItems, activeCategory } = this.state;
     return (
       <ApolloClientProvider>
-         <BrowserRouter>
-        {/* <Router> */}
-          <Header cartItems={cartItems} onCategoryChange={this.handleCategoryChange} />
+         {/* <BrowserRouter> */}
+        <Router>
+          {/* <Header cartItems={cartItems} onCategoryChange={this.handleCategoryChange} /> */}
+          <Header 
+  cartItems={cartItems} 
+  onCategoryChange={this.handleCategoryChange} 
+  activeCategory={this.state.activeCategory} 
+/>
+
           <div>
             
             <Routes>
@@ -49,8 +55,8 @@ class App extends Component {
               
             </Routes>
           </div>
-        {/* </Router> */}
-         </BrowserRouter>
+        </Router>
+         {/* </BrowserRouter> */}
       </ApolloClientProvider>
     );
   }

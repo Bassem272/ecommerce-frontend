@@ -100,13 +100,13 @@ class CartOverlay extends Component {
   {/* Overlay to darken the background */}
   <div className="absolute inset-0 bg-black bg-opacity-20" onClick={onClose} />
 
-  <div className="w-auto bg-green-100 h-5/6 p-4 shadow-lg relative z-50 mr-12">
+  <div className="w-auto bg-green-100 h-5/6 p-4 shadow-lg relative z-50 mr-12 ">
     <button className="absolute top-2 right-2 text-red-500" onClick={onClose}>
       <i className="fas fa-times"></i>
     </button>
     <h2 className="text-sm font-semibold mb-4">My Bag: {totalItems} {totalItems > 1 ? 'Items' : 'Item'}</h2>
 
-    <div className="overflow-y-auto max-h-64 bg-slate-50">
+    <div className="overflow-y-auto max-h-64 bg-slate-50 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 overflow-y-scroll">
       {cartItems.map((item, index) => (
         <div key={index} className="flex justify-between mb-2 border bg-white p-2">
           {/* Left side: Product details */}

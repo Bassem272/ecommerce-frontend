@@ -47,8 +47,12 @@ class ProductDetailPage extends Component {
       isAddToCartEnabled: false,
       currentImageIndex: 0 // Track the currently selected image index
     };
+    console.log("we are here detailed ")
   }
-
+  componentWillUnmount() {
+    console.log('ProductDetailPage unmounted');
+    // Perform any necessary cleanup
+  }
   handleImageSelect = (imageUrl, gallery) => {
     // Ensure gallery exists
     if (!gallery) return;

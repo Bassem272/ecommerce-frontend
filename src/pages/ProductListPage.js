@@ -45,6 +45,7 @@ const GET_PRODUCTS = gql`
 class ProductListPage extends Component {
   render() {
     const { addToCart, activeCategory } = this.props; // Destructure the activeCategory prop
+    console.log("we are here list ")
 
     return (
       <div className="container mx-auto p-5">
