@@ -4,12 +4,21 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'react-feather';
 
 class ProductCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cartItems: JSON.parse(localStorage.getItem('cart')) || [],
+      totalItems :0,
+    };
+  }
   // Function to handle adding product to the cart
  // Function to handle adding product to the cart
  handleAddToCart = () => {
   const { product, addToCart } = this.props; // Destructure addToCart from props
   console.log("product" , product )
+
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  console.log("productcard_handleaddcart", cart)
 
   // Check if the product already exists in the cart
   const productExists = cart.some(item => item.id === product.id);
@@ -22,11 +31,11 @@ class ProductCard extends Component {
     };
 
     // Add the product to the cart array
-    cart.push(productToAdd);
-
+    // cart.push(productToAdd);
+    this.setState({ cartItems: cart });
     // Save the updated cart to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
-
+    
     // Call the addToCart method passed from ProductListPage
     addToCart(productToAdd);
     console.log(`${product.name} added to cart`);

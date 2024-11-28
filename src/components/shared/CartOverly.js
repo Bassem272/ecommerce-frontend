@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { CiSquarePlus , CiSquareMinus } from "react-icons/ci";
-import ProductAttributes from './../ProductAttributes'; // Assuming you have the ProductAttributes component
+import CartAttributes from './../CartAttributes'; // Assuming you have the ProductAttributes component
 
 class CartOverlay extends Component {
   constructor(props) {
@@ -18,6 +18,8 @@ class CartOverlay extends Component {
       return total + quantity;
     }, 0);
     this.setState({ totalItems });
+    console.log("cart_cart_cdm_", cartItems)
+    console.log("cart_totalitems_cdm", totalItems)
     
     document.body.style.overflow = 'hidden';
   }
@@ -26,13 +28,25 @@ class CartOverlay extends Component {
     document.body.style.overflow = 'auto';
   }
 
+
+
   handleRemoveFromCart = (productId, selectedAttributes) => {
     const updatedCart = this.state.cartItems.filter(
       (item) => !(item.id === productId && JSON.stringify(item.selectedAttributes) === JSON.stringify(selectedAttributes))
     );
     this.setState({ cartItems: updatedCart });
+    const totalItems = updatedCart.reduce((total, item) => {
+      const quantity = (item.quantity && typeof item.quantity === 'number' && item.quantity > 0) ? item.quantity : 1;
+      return total + quantity;
+    }, 0);
+    this.setState({ totalItems });
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+    console.log("remove_cart_itme", totalItems)
+    console.log("______cart_removed", updatedCart)
+   
   };
+
+
 
   handleUpdateQuantity = (productId, selectedAttributes, quantity) => {
     const updatedCart = this.state.cartItems.map((item) =>
@@ -42,6 +56,12 @@ class CartOverlay extends Component {
     );
     this.setState({ cartItems: updatedCart });
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+    const totalItems = updatedCart.reduce((total, item) => {
+      const quantity = (item.quantity && typeof item.quantity === 'number' && item.quantity > 0) ? item.quantity : 1;
+      return total + quantity;
+    }, 0);
+    this.setState({ totalItems });
+    
   };
 
   handleAttributeChange = (productId, selectedAttributes) => {
@@ -68,7 +88,7 @@ class CartOverlay extends Component {
 
     }
     console.log('Order placed successfully!', order, currentTime)
-    alert('Order placed succey!');
+    alert('Order placed success !');
   };
 
   render() {
@@ -76,11 +96,11 @@ class CartOverlay extends Component {
     const { onClose } = this.props;
 
     return (
-        <div className="fixed inset-0 flex justify-end" style={{ top: '64px', zIndex: 1000 }}>
+        <div className="fixed inset-0 flex justify-end" style={{ top: '64px', zIndex: 1000, }}>
   {/* Overlay to darken the background */}
   <div className="absolute inset-0 bg-black bg-opacity-20" onClick={onClose} />
 
-  <div className="w-auto bg-green-100 h-5/6 p-4 shadow-lg relative z-50 bg">
+  <div className="w-auto bg-green-100 h-5/6 p-4 shadow-lg relative z-50 mr-12">
     <button className="absolute top-2 right-2 text-red-500" onClick={onClose}>
       <i className="fas fa-times"></i>
     </button>
@@ -100,7 +120,7 @@ class CartOverlay extends Component {
                 <div
                   data-testid={`cart-item-attribute-${item.name.toLowerCase().replace(/\s+/g, '-')}`} // Added data-testid
                 >
-                  <ProductAttributes
+                  <CartAttributes
                     attributes={item.attributes}
                     onAttributeChange={(selectedAttributes) => this.handleAttributeChange(item.id, selectedAttributes)}
                     isCartItem={true} // Indicate that this is from CartOverlay
@@ -111,14 +131,14 @@ class CartOverlay extends Component {
           </div>
 
           {/* Right side: Image and Quantity controls */}
-          <div className="w-1/3 flex flex-col items-center justify-between">
-            <div className="flex items-center mb-2">
+          <div className="w-2/3 flex flex-col items-center justify-between">
+            <div className="flex items-center mb-4">
               {/* Quantity controls */}
               <div className="flex flex-col items-center mr-2 ">
-                <button data-testid='cart-item-amount-increase' onClick={() => this.handleUpdateQuantity(item.id, item.selectedAttributes, item.quantity + 1)}>
+                <button className = "mb-6 mt-5" data-testid='cart-item-amount-increase' onClick={() => this.handleUpdateQuantity(item.id, item.selectedAttributes, item.quantity + 1)}>
                   <CiSquarePlus />
                 </button>
-                <span data-testid='cart-item-amount' >{item.quantity ? item.quantity : 1}</span>
+                <span className = "mb-6"  data-testid='cart-item-amount' >{item.quantity ? item.quantity : 1}</span>
                 <button data-testid='cart-item-amount-decrease' onClick={() => this.handleUpdateQuantity(item.id, item.selectedAttributes, item.quantity - 1)}>
                   <CiSquareMinus />
                 </button>
@@ -128,7 +148,7 @@ class CartOverlay extends Component {
               <img 
                 src={item.gallery[0].image_url} 
                 alt={item.name} 
-                className="w-20 h-20 object-cover border-y-2 border-red-400" 
+                className="w-26 h-33 object-cover border-y-2 border-red-400" 
                 style={{ maxHeight: '120px' }} 
               />
             </div>
@@ -179,7 +199,7 @@ class CartOverlay extends Component {
 
 //             {/* Display attributes below the product */}
 //             {item.attributes.length > 0 && (
-//               <ProductAttributes
+//               <CartAttributes
 //                 attributes={item.attributes}
 //                 onAttributeChange={(selectedAttributes) => this.handleAttributeChange(item.id, selectedAttributes)}
 //               />

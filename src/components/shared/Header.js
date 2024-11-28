@@ -97,6 +97,22 @@ class Header extends Component {
       isCartOpen: false,
       activeCategory: 'All', // New state for active category
     };
+    
+  }
+
+
+
+  componentDidUpdate(prevProps, prevState) {
+    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+    // Compare the current cart with the previous cart stored in the state
+    if (JSON.stringify(prevState.cart) !== JSON.stringify(currentCart)) {
+      // If the cart has changed, update the state and recalculate total items
+      this.setState({ cart: currentCart }, () => {
+         console.log("we created updtate to the cart ")
+        this.updateTotalItems();
+      });
+    }
   }
 
   componentDidMount() {
@@ -106,7 +122,25 @@ class Header extends Component {
       return total + quantity;
     }, 0);
     this.setState({ totalItems });
+    this.updateTotalItems();
+
   }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   // Fetch the current cart data from localStorage
+  //   const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+  //   const prevCart =  prevState.cartItems || [];
+  //   console.log("header_cdu",currentCart)
+  //   console.log("header_cdu_prevcart",prevCart)
+  
+  //   // Compare the current cart with the previous cart
+  //   if (JSON.stringify(prevCart) !== JSON.stringify(currentCart)) {
+  //     // If the cart has changed, recalculate the total items
+  //     this.updateTotalItems();
+  //     console.log("we called update total items")
+  //   }
+  // }
+  
 
   toggleCart = () => {
     this.setState((prevState) => ({ isCartOpen: !prevState.isCartOpen }));
@@ -121,17 +155,31 @@ class Header extends Component {
     this.props.onCategoryChange(category); // Call function to update products in parent
   };
 
+
+  updateTotalItems = () => {
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cartItems.reduce((total, item) => {
+        const quantity = (item.quantity && typeof item.quantity === 'number' && item.quantity > 0) ? item.quantity : 1;
+        return total + quantity;
+    }, 0);   
+    
+    console.log("se oc", cartItems)
+      console.log("se oc", totalItems)
+      this.setState({ totalItems :totalItems});
+
+};
   render() {
-    const { cartItems } = this.props; // Get cartItems from props
+    // const { cartItems } = this.props; // Get cartItems from props
     const { isCartOpen } = this.state;
     const { activeCategory } = this.state;
 
     // Calculate totalItems based on cartItems prop
-    const totalItems = cartItems.reduce((total, item) => {
-      const quantity = (item.quantity && typeof item.quantity === 'number' && item.quantity > 0) ? item.quantity : 1;
-      return total + quantity;
-    }, 0);
-
+    const { totalItems } = this.state
+    // cartItems.reduce((total, item) => {
+    //   const quantity = (item.quantity && typeof item.quantity === 'number' && item.quantity > 0) ? item.quantity : 1;
+    //   return total + quantity;
+    // }, 0);
+              console.log("hot___=++++",totalItems)
     return (
       <div className="flex flex-row items-center w-full h-16 p-1 m-0 border-b-4 shadow-sm text-black font-medium text-lg">
         <div className="flex flex-row items-center w-fit h-full ml-8">
