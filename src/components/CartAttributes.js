@@ -155,7 +155,7 @@ class CartAttributes extends Component {
     const { selectedAttributes } = this.state;
 
     return (
-      <div>
+      <div >
         
         {attributes
           .filter((attr) => this.isRelevantAttribute(attr.name))

@@ -207,6 +207,8 @@ import React, { useState, useEffect } from 'react';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import CartOverlay from './CartOverly'; // Correct import path for CartOverlay
+import { RefreshCw } from 'react-feather';
+
 
 const Header = ({ onCategoryChange }) => {
   const [totalItems, setTotalItems] = useState(0);
@@ -296,6 +298,15 @@ const Header = ({ onCategoryChange }) => {
           </button>
         ))}
       </div>
+      <div className="flex-1"></div>
+      {isCartOpen &&     (
+    <img
+      src="/refresh-svgrepo-com.svg"
+      alt="refresh icon"
+      className="w-9 h-9"
+    />
+  )
+          }
       <div className="flex-1"></div>
       <button
         data-testid="cart-btn"
