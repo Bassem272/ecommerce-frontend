@@ -58,38 +58,79 @@ class ProductAttributes extends Component {
     const { selectedAttributes } = this.state;
 
     return (
+      // <div>
+      //   {attributes
+      //     .filter((attr) => this.isRelevantAttribute(attr.name))
+      //     .map((attr) => {
+      //       const kebabCaseName = attr.name.toLowerCase().replace(/\s+/g, '-');
+      //       return (
+      //         <div key={attr.id} className="my-4" data-testid={`product-attribute-${kebabCaseName}`}>
+      //           <h3 className="mb-2 text-sm">{attr.name}</h3>
+      //           <div className="flex space-x-2">
+      //             {attr.attribute_items.map((item) => {
+      //               const isSelected = selectedAttributes[attr.name] === item.value;
+      //               return (
+      //                 <button
+      //                   key={item.id}
+      //                   onClick={() => this.handleAttributeClick(attr.name, item.value)}
+      //                   className={`border px-3 py-1 text-sm ${isSelected ? 'border-blue-500' : ''}`}
+      //                   style={
+      //                     attr.name.toLowerCase() === 'color'
+      //                       ? { backgroundColor: item.value, width: '40px', height: '40px' }
+      //                       : {}
+      //                   }
+      //                   data-testid={`product-attribute-${kebabCaseName}-${item.value.toLowerCase().replace(/\s+/g, '-')}${isSelected ? '-selected' : ''}`}
+      //                 >
+      //                   {attr.name.toLowerCase() !== 'color' ? item.displayValue : ''}
+      //                 </button>
+      //               );
+      //             })}
+      //           </div>
+      //         </div>
+      //       );
+      //     })}
+      // </div>
       <div>
-        {attributes
-          .filter((attr) => this.isRelevantAttribute(attr.name))
-          .map((attr) => {
-            const kebabCaseName = attr.name.toLowerCase().replace(/\s+/g, '-');
-            return (
-              <div key={attr.id} className="my-4" data-testid={`product-attribute-${kebabCaseName}`}>
-                <h3 className="mb-2 text-sm">{attr.name}</h3>
-                <div className="flex space-x-2">
-                  {attr.attribute_items.map((item) => {
-                    const isSelected = selectedAttributes[attr.name] === item.value;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => this.handleAttributeClick(attr.name, item.value)}
-                        className={`border px-3 py-1 text-sm ${isSelected ? 'border-blue-500' : ''}`}
-                        style={
-                          attr.name.toLowerCase() === 'color'
-                            ? { backgroundColor: item.value, width: '40px', height: '40px' }
-                            : {}
-                        }
-                        data-testid={`product-attribute-${kebabCaseName}-${item.value.toLowerCase().replace(/\s+/g, '-')}${isSelected ? '-selected' : ''}`}
-                      >
-                        {attr.name.toLowerCase() !== 'color' ? item.displayValue : ''}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-      </div>
+  {attributes
+    .filter((attr) => this.isRelevantAttribute(attr.name))
+    .map((attr) => {
+      const kebabCaseName = attr.name.toLowerCase().replace(/\s+/g, '-');
+      return (
+        <div
+          key={attr.id}
+          className="my-4"
+          data-testid={`product-attribute-${kebabCaseName}`}
+        >
+          <h3 className="mb-2 text-sm md:text-base">{attr.name}</h3>
+          <div className="flex flex-wrap gap-2">
+            {attr.attribute_items.map((item) => {
+              const isSelected = selectedAttributes[attr.name] === item.value;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => this.handleAttributeClick(attr.name, item.value)}
+                  className={`border px-2 md:px-3 py-1 text-sm md:text-base ${
+                    isSelected ? 'border-blue-500' : ''
+                  }`}
+                  style={
+                    attr.name.toLowerCase() === 'color'
+                      ? { backgroundColor: item.value, width: '40px', height: '40px' }
+                      : {}
+                  }
+                  data-testid={`product-attribute-${kebabCaseName}-${item.value
+                    .toLowerCase()
+                    .replace(/\s+/g, '-')}${isSelected ? '-selected' : ''}`}
+                >
+                  {attr.name.toLowerCase() !== 'color' ? item.displayValue : ''}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    })}
+</div>
+
     );
   }
 }

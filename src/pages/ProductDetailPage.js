@@ -131,58 +131,108 @@ class ProductDetailPage extends Component {
           }
   
           return (
-            <div className="grid grid-cols-3 gap-6 p-8">
-              {/* Gallery Section */}
-              <div className="col-span-2 grid grid-cols-5 gap-4" data-testid="product-gallery">
-                {/* Vertical Image Carousel */}
-                <VerticalCarousel
-                  gallery={gallery}
-                  onSelectImage={(imageUrl) => this.handleImageSelect(imageUrl, gallery)} // Pass gallery to handler
-                  selectedImage={gallery[currentImageIndex]?.image_url} // Highlight the selected image
-                />
+            // <div className="grid grid-cols-3 gap-6 p-8">
+            //   {/* Gallery Section */}
+            //   <div className="col-span-2 grid grid-cols-5 gap-4" data-testid="product-gallery">
+            //     {/* Vertical Image Carousel */}
+            //     <VerticalCarousel
+            //       gallery={gallery}
+            //       onSelectImage={(imageUrl) => this.handleImageSelect(imageUrl, gallery)} // Pass gallery to handler
+            //       selectedImage={gallery[currentImageIndex]?.image_url} // Highlight the selected image
+            //     />
   
-                {/* Main Image with Arrows */}
-                <MainImage
-                  gallery={gallery}
-                  currentImageIndex={currentImageIndex}
-                  nextImage={() => this.nextImage(gallery)} // Pass gallery to next/prev handlers
-                  prevImage={() => this.prevImage(gallery)}
-                />
-              </div>
+            //     {/* Main Image with Arrows */}
+            //     <MainImage
+            //       gallery={gallery}
+            //       currentImageIndex={currentImageIndex}
+            //       nextImage={() => this.nextImage(gallery)} // Pass gallery to next/prev handlers
+            //       prevImage={() => this.prevImage(gallery)}
+            //     />
+            //   </div>
   
-              <div className="col-span-1">
-                {/* Product Name */}
-                <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
+            //   <div className="col-span-1">
+            //     {/* Product Name */}
+            //     <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
   
-                {/* Product Attributes with Specific data-testid */}
-                <ProductAttributes
-                  attributes={product.attributes}
-                  onAttributeChange={this.handleAttributeSelection}
-                  isCartItem={false}
-               />
+            //     {/* Product Attributes with Specific data-testid */}
+            //     <ProductAttributes
+            //       attributes={product.attributes}
+            //       onAttributeChange={this.handleAttributeSelection}
+            //       isCartItem={false}
+            //    />
   
-                {/* Product Price */}
-                <p className="text-xl font-semibold my-4">
-                  ${product.price[0].amount.toFixed(2)}
-                </p>
+            //     {/* Product Price */}
+            //     <p className="text-xl font-semibold my-4">
+            //       ${product.price[0].amount.toFixed(2)}
+            //     </p>
   
-                {/* Add to Cart Button */}
-                <button
-                  data-testid="add-to-cart"
-                  className={`bg-green-500 text-white px-4 py-2 mt-4 w-full ${!isAddToCartEnabled ? 'disabled opacity-50' : ''} hover:bg-green-400`}
-                  onClick={() => this.handleAddToCart(product)}
-                  disabled={!isAddToCartEnabled}
-                >
-                  {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-                </button>
+            //     {/* Add to Cart Button */}
+            //     <button
+            //       data-testid="add-to-cart"
+            //       className={`bg-green-500 text-white px-4 py-2 mt-4 w-full ${!isAddToCartEnabled ? 'disabled opacity-50' : ''} hover:bg-green-400`}
+            //       onClick={() => this.handleAddToCart(product)}
+            //       disabled={!isAddToCartEnabled}
+            //     >
+            //       {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+            //     </button>
   
-                {/* Product Description */}
-                <div className="mt-6">
-                  <h2 className="text-lg font-bold mb-2">Description</h2>
-                  <div data-testid="product-description">{parse(product.description)}</div>
-                </div>
-              </div>
-            </div>
+            //     {/* Product Description */}
+            //     <div className="mt-6">
+            //       <h2 className="text-lg font-bold mb-2">Description</h2>
+            //       <div data-testid="product-description">{parse(product.description)}</div>
+            //     </div>
+            //   </div>
+            // </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 md:p-8">
+  {/* Gallery Section */}
+  <div
+    className="md:col-span-2 grid grid-cols-1 sm:grid-cols-5 gap-4"
+    data-testid="product-gallery"
+  >
+    {/* Vertical Image Carousel */}
+    <VerticalCarousel
+      gallery={gallery}
+      onSelectImage={(imageUrl) => this.handleImageSelect(imageUrl, gallery)}
+      selectedImage={gallery[currentImageIndex]?.image_url}
+    />
+
+    {/* Main Image with Arrows */}
+    <MainImage
+      gallery={gallery}
+      currentImageIndex={currentImageIndex}
+      nextImage={() => this.nextImage(gallery)}
+      prevImage={() => this.prevImage(gallery)}
+    />
+  </div>
+
+  {/* Product Details */}
+  <div className="md:col-span-1">
+    <h1 className="text-lg md:text-2xl font-bold mb-4">{product.name}</h1>
+    <ProductAttributes
+      attributes={product.attributes}
+      onAttributeChange={this.handleAttributeSelection}
+      isCartItem={false}
+    />
+    <p className="text-lg md:text-xl font-semibold my-4">
+      ${product.price[0].amount.toFixed(2)}
+    </p>
+    <button
+      data-testid="add-to-cart"
+      className={`bg-green-500 text-white px-4 py-2 mt-4 w-full ${
+        !isAddToCartEnabled ? 'disabled opacity-50' : ''
+      } hover:bg-green-400`}
+      onClick={() => this.handleAddToCart(product)}
+      disabled={!isAddToCartEnabled}
+    >
+      {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+    </button>
+    <div className="mt-6">
+      <h2 className="text-md md:text-lg font-bold mb-2">Description</h2>
+      <div data-testid="product-description">{parse(product.description)}</div>
+    </div>
+  </div>
+</div>
+
           );
         }}
       </Query>

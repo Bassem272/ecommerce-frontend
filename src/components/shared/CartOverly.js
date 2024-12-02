@@ -10,6 +10,7 @@ class CartOverlay extends Component {
     this.state = {
       cartItems: JSON.parse(localStorage.getItem("cart")) || [],
       totalItems: 0,
+      noProducts : false,
     };
   }
 
@@ -98,40 +99,7 @@ class CartOverlay extends Component {
       0
     );
   };
-    // const order = {
-    //   ...this.state.cartItems,
-    //   orderTotal: this.getTotalPrice().toFixed(2),
-    //   orderTime: currentTime,
-    // };
-  // const [createOrder, { data, loading, error }] = useMutation(CREATE_ORDER);
-//   handlePlaceOrder = async (createOrder) => {
-//     const currentTime = new Date().toLocaleTimeString();
-//     console.log("Placing order:", this.state.cartItems);
 
-//       // Construct the order object
-//   const order = {
-//     items: this.state.cartItems.map(item => ({
-//         productId: item.id, // Ensure this matches your mutation requirements
-//         name: item.name, // Add name
-//         price: item.price[0].amount,
-//         quantity: item.quantity,
-//         selectedAttributes: item.selectedAttributes,
-//         categoryId: item.categoryId, // Add categoryId
-//         inStock: item.inStock, // Add inStock
-//     })),
-
-//   };
-//     try {
-//       const response = await createOrder({
-//         variables: { items: order, userId: "qwerererer" },
-//       });
-//       console.log("Order placed successfully:", response);
-//     } catch (err) {
-//       console.error("Error placing order:", err);
-//     }
-//     console.log("Order placed successfully!", order, currentTime);
-//     alert("Order placed success !");
-//   };
 handlePlaceOrder = async (createOrder) => {
     const currentTime = new Date().toLocaleTimeString();
     console.log("Placing order:", this.state.cartItems);
@@ -161,6 +129,15 @@ handlePlaceOrder = async (createOrder) => {
         // Log and alert success
         console.log("Order placed successfully:", response.data.createOrder);
         alert("Order placed successfully!");
+        localStorage.removeItem("cart");
+        this.setState({ cartItems: []});
+        this.setState({  totalItems: 0 });
+        const cartt = JSON.parse(localStorage.getItem("cart"))
+        console.log("cart_after",this.state.totalItems  ,cartt)
+        window.dispatchEvent(new Event("cartUpdated"));
+  
+        
+
     } catch (err) {
         // Log errors
         console.error("Error placing order:", err);
@@ -200,143 +177,285 @@ handlePlaceOrder = async (createOrder) => {
     return (
       <Mutation mutation={CREATE_ORDER}>
         {(createOrder, { loading, error, data }) => {
-          if (loading) return <p>Placing your order...</p>;
-          if (error) return <p>Error placing order: {error.message}</p>;
+          // if (loading) return <p>Placing your order...</p>;
+          // if (error) return <p>Error placing order: {error.message}</p>;
 
           return (
+            // <div
+            //   className="fixed inset-0 flex justify-end"
+            //   style={{ top: "64px", zIndex: 1000 }}
+            // >
+            //   {/* Overlay to darken the background */}
+            //   <div
+            //     className="absolute inset-0 bg-black bg-opacity-20"
+            //     onClick={onClose}
+            //   />
+
+            //   {/* Sidebar Container */}
+            //   <div className="flex flex-col bg-white h-5/6 p-4 shadow-lg relative z-50 mr-12 max-w-xs sm:max-w-sm">
+            //     {/* Close Button */}
+            //     <button
+            //       className="absolute top-2 right-2 text-red-500"
+            //       onClick={onClose}
+            //     >
+            //       <i className="fas fa-times"></i>
+            //     </button>
+
+            //     {/* Bag Header */}
+            //     <h2 className="text-sm font-semibold mb-4">
+            //       My Bag: {totalItems} {totalItems > 1 ? "Items" : "Item"}
+            //     </h2>
+
+            //     {/* Scrollable Items Section */}
+            //     <div
+            //       className="flex-grow overflow-y-auto overflow-x-hidden
+            //   scrollbar-thin scrollbar-thumb-blue-500
+            //   scrollbar-track-gray-200 p-2"
+            //     >
+            //       {cartItems.map((item, index) => (
+            //         <div
+            //           key={index}
+            //           className="flex justify-between mb-2 border bg-white p-2"
+            //         >
+            //           {/* Left side: Product details */}
+            //           <div className="flex flex-col justify-between w-2/3 pr-2">
+            //             <h3 className="text-sm font-semibold">{item.name}</h3>
+            //             <p className="text-sm">${item.price[0].amount}</p>
+            //             {item.attributes.length > 0 && (
+            //               <CartAttributes
+            //                 attributes={item.attributes}
+            //                 onAttributeChange={(selectedAttributes) =>
+            //                   this.handleAttributeChange(
+            //                     item.id,
+            //                     selectedAttributes
+            //                   )
+            //                 }
+            //                 isCartItem={true}
+            //               />
+            //             )}
+            //           </div>
+
+            //           {/* Right side: Image and Quantity controls */}
+            //           <div className="w-2/3 flex flex-col items-center">
+            //             <div className="flex items-center mb-4">
+            //               <div className="flex flex-col items-center mr-2">
+            //                 <button
+            //                   className="mb-6 mt-5"
+            //                   data-testid="cart-item-amount-increase"
+            //                   onClick={() =>
+            //                     this.handleUpdateQuantity(
+            //                       item.id,
+            //                       item.selectedAttributes,
+            //                       item.quantity + 1
+            //                     )
+            //                   }
+            //                 >
+            //                   <CiSquarePlus />
+            //                 </button>
+            //                 <span
+            //                   className="mb-6"
+            //                   data-testid="cart-item-amount"
+            //                 >
+            //                   {item.quantity ? item.quantity : 1}
+            //                 </span>
+            //                 <button
+            //                   data-testid="cart-item-amount-decrease"
+            //                   onClick={() =>
+            //                     this.handleUpdateQuantity(
+            //                       item.id,
+            //                       item.selectedAttributes,
+            //                       item.quantity - 1
+            //                     )
+            //                   }
+            //                 >
+            //                   <CiSquareMinus />
+            //                 </button>
+            //               </div>
+            //               <img
+            //                 src={item.gallery[0].image_url}
+            //                 alt={item.name}
+            //                 className="w-26 h-33 object-cover border-y-2 border-red-400  w-full max-w-full"
+            //                 style={{ maxHeight: "120px" }}
+            //               />
+            //             </div>
+            //             <button
+            //               className="text-xs mt-2"
+            //               onClick={() =>
+            //                 this.handleRemoveFromCart(
+            //                   item.id,
+            //                   item.selectedAttributes
+            //                 )
+            //               }
+            //             >
+            //               Remove
+            //             </button>
+            //           </div>
+            //         </div>
+            //       ))}
+            //     </div>
+            //     {/* Fixed Footer Section */}
+            //     <div className="border-t pt-4">
+            //       {/* Total */}
+            //       <div className="flex justify-between">
+            //         <span className="font-semibold">Total:</span>
+            //         <span className="font-semibold">
+            //           ${this.getTotalPrice().toFixed(2)}
+            //         </span>
+            //       </div>
+
+            //       {/* Place Order Button */}
+            //       <button
+            //         onClick={() => this.handlePlaceOrder(createOrder)}
+            //         className="w-full bg-green-500 text-white py-2 mt-4 rounded"
+            //       >
+            //         Place Order
+            //       </button>
+            //     </div>
+            //   </div>
+            // </div>
+
             <div
-              className="fixed inset-0 flex justify-end"
-              style={{ top: "64px", zIndex: 1000 }}
+  className="fixed inset-0 flex justify-end"
+  style={{ top: "64px", zIndex: 1000 }}
+>
+  {/* Overlay to darken the background */}
+  <div
+    className="absolute inset-0 bg-black bg-opacity-20"
+    onClick={onClose}
+  />
+
+  {/* Sidebar Container */}
+  <div className="flex flex-col bg-white h-5/6 p-4 shadow-lg relative z-50 mr-12 max-w-xs sm:max-w-sm">
+    {/* Close Button */}
+    <button
+      className="absolute top-2 right-2 text-red-500"
+      onClick={onClose}
+    >
+      <i className="fas fa-times"></i>
+    </button>
+
+    {/* Conditional Rendering for Empty or Filled Cart */}
+    {cartItems.length === 0 ? (
+      <div className="flex flex-col items-center justify-center h-24 text-gray-600">
+        <i className="fas fa-shopping-cart text-4xl mb-4"></i>
+        <p className="text-sm font-semibold">Your cart is empty</p>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-500 text-white text-sm rounded shadow"
+          onClick={onClose}
+        >
+          Continue Shopping
+        </button>
+      </div>
+    ) : (
+      <>
+        {/* Bag Header */}
+        <h2 className="text-sm font-semibold mb-4">
+          My Bag: {totalItems} {totalItems > 1 ? "Items" : "Item"}
+        </h2>
+
+        {/* Scrollable Items Section */}
+        <div
+          className="flex-grow overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 p-2"
+        >
+          {cartItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex justify-between mb-2 border bg-white p-2"
             >
-              {/* Overlay to darken the background */}
-              <div
-                className="absolute inset-0 bg-black bg-opacity-20"
-                onClick={onClose}
-              />
+              {/* Left side: Product details */}
+              <div className="flex flex-col justify-between w-2/3 pr-2">
+                <h3 className="text-sm font-semibold">{item.name}</h3>
+                <p className="text-sm">${item.price[0].amount}</p>
+                {item.attributes.length > 0 && (
+                  <CartAttributes
+                    attributes={item.attributes}
+                    onAttributeChange={(selectedAttributes) =>
+                      this.handleAttributeChange(item.id, selectedAttributes)
+                    }
+                    isCartItem={true}
+                  />
+                )}
+              </div>
 
-              {/* Sidebar Container */}
-              <div className="flex flex-col bg-white h-5/6 p-4 shadow-lg relative z-50 mr-12 max-w-xs sm:max-w-sm">
-                {/* Close Button */}
-                <button
-                  className="absolute top-2 right-2 text-red-500"
-                  onClick={onClose}
-                >
-                  <i className="fas fa-times"></i>
-                </button>
-
-                {/* Bag Header */}
-                <h2 className="text-sm font-semibold mb-4">
-                  My Bag: {totalItems} {totalItems > 1 ? "Items" : "Item"}
-                </h2>
-
-                {/* Scrollable Items Section */}
-                <div
-                  className="flex-grow overflow-y-auto overflow-x-hidden
-              scrollbar-thin scrollbar-thumb-blue-500
-              scrollbar-track-gray-200 p-2"
-                >
-                  {cartItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between mb-2 border bg-white p-2"
+              {/* Right side: Image and Quantity controls */}
+              <div className="w-2/3 flex flex-col items-center">
+                <div className="flex items-center mb-4">
+                  <div className="flex flex-col items-center mr-2">
+                    <button
+                      className="mb-6 mt-5"
+                      data-testid="cart-item-amount-increase"
+                      onClick={() =>
+                        this.handleUpdateQuantity(
+                          item.id,
+                          item.selectedAttributes,
+                          item.quantity + 1
+                        )
+                      }
                     >
-                      {/* Left side: Product details */}
-                      <div className="flex flex-col justify-between w-2/3 pr-2">
-                        <h3 className="text-sm font-semibold">{item.name}</h3>
-                        <p className="text-sm">${item.price[0].amount}</p>
-                        {item.attributes.length > 0 && (
-                          <CartAttributes
-                            attributes={item.attributes}
-                            onAttributeChange={(selectedAttributes) =>
-                              this.handleAttributeChange(
-                                item.id,
-                                selectedAttributes
-                              )
-                            }
-                            isCartItem={true}
-                          />
-                        )}
-                      </div>
-
-                      {/* Right side: Image and Quantity controls */}
-                      <div className="w-2/3 flex flex-col items-center">
-                        <div className="flex items-center mb-4">
-                          <div className="flex flex-col items-center mr-2">
-                            <button
-                              className="mb-6 mt-5"
-                              data-testid="cart-item-amount-increase"
-                              onClick={() =>
-                                this.handleUpdateQuantity(
-                                  item.id,
-                                  item.selectedAttributes,
-                                  item.quantity + 1
-                                )
-                              }
-                            >
-                              <CiSquarePlus />
-                            </button>
-                            <span
-                              className="mb-6"
-                              data-testid="cart-item-amount"
-                            >
-                              {item.quantity ? item.quantity : 1}
-                            </span>
-                            <button
-                              data-testid="cart-item-amount-decrease"
-                              onClick={() =>
-                                this.handleUpdateQuantity(
-                                  item.id,
-                                  item.selectedAttributes,
-                                  item.quantity - 1
-                                )
-                              }
-                            >
-                              <CiSquareMinus />
-                            </button>
-                          </div>
-                          <img
-                            src={item.gallery[0].image_url}
-                            alt={item.name}
-                            className="w-26 h-33 object-cover border-y-2 border-red-400  w-full max-w-full"
-                            style={{ maxHeight: "120px" }}
-                          />
-                        </div>
-                        <button
-                          className="text-xs mt-2"
-                          onClick={() =>
-                            this.handleRemoveFromCart(
-                              item.id,
-                              item.selectedAttributes
-                            )
-                          }
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Fixed Footer Section */}
-                <div className="border-t pt-4">
-                  {/* Total */}
-                  <div className="flex justify-between">
-                    <span className="font-semibold">Total:</span>
-                    <span className="font-semibold">
-                      ${this.getTotalPrice().toFixed(2)}
+                      <CiSquarePlus />
+                    </button>
+                    <span className="mb-6" data-testid="cart-item-amount">
+                      {item.quantity ? item.quantity : 1}
                     </span>
+                    <button
+                      data-testid="cart-item-amount-decrease"
+                      onClick={() =>
+                        this.handleUpdateQuantity(
+                          item.id,
+                          item.selectedAttributes,
+                          item.quantity - 1
+                        )
+                      }
+                    >
+                      <CiSquareMinus />
+                    </button>
                   </div>
-
-                  {/* Place Order Button */}
-                  <button
-                    onClick={() => this.handlePlaceOrder(createOrder)}
-                    className="w-full bg-green-500 text-white py-2 mt-4 rounded"
-                  >
-                    Place Order
-                  </button>
+                  <img
+                    src={item.gallery[0].image_url}
+                    alt={item.name}
+                    className="w-26 h-33 object-cover border-y-2 border-red-400 w-full max-w-full"
+                    style={{ maxHeight: "120px" }}
+                  />
                 </div>
+                <button
+                  className="text-xs mt-2"
+                  onClick={() =>
+                    this.handleRemoveFromCart(
+                      item.id,
+                      item.selectedAttributes
+                    )
+                  }
+                >
+                  Remove
+                </button>
               </div>
             </div>
+          ))}
+        </div>
+
+        {/* Fixed Footer Section */}
+        <div className="border-t pt-4">
+          {/* Total */}
+          <div className="flex justify-between">
+            <span className="font-semibold">Total:</span>
+            <span className="font-semibold">
+              ${this.getTotalPrice().toFixed(2)}
+            </span>
+          </div>
+
+          {/* Place Order Button */}
+          <button
+            onClick={() => this.handlePlaceOrder(createOrder)}
+            className="w-full bg-green-500 text-white py-2 mt-4 rounded"
+          >
+            Place Order
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+</div>
+
           );
         }}
       </Mutation>
