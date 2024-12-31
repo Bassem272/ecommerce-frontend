@@ -121,8 +121,9 @@ class ProductDetailPage extends Component {
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error: {error.message}</p>;
+          console.log("data_of_product", data)
   
-          const product = data.product;
+          const product = data.product[0];
           const gallery = product?.gallery || []; // Ensure gallery is available
   
           // Early return if product is not defined
