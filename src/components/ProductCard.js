@@ -17,6 +17,11 @@ class ProductCard extends Component {
   const { product, addToCart } = this.props; // Destructure addToCart from props
   console.log("product" , product )
 
+    // Check if the product is out of stock
+    if (!product.inStock) {
+      console.log(`${product.name} is out of stock and cannot be added to the cart.`);
+      return; // Stop further execution
+    }
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   console.log("productcard_handleaddcart", cart)
 
@@ -76,9 +81,10 @@ render() {
 
         {/* Cart Icon (appears on hover) */}
         <div
-          className="absolute bottom-2 right-2 bg-green-500 text-white rounded-full p-2 cursor-pointer
-                     opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          onClick={this.handleAddToCart}
+          className={`absolute bottom-2 right-2 bg-green-500 text-white rounded-full p-2 cursor-pointer
+                      group-hover:opacity-100 transition-opacity duration-300 
+                      ${!product.inStock ?`opacity-50 cursor-not-allowed` :`opacity-0`}`}
+          onClick={!product.inStock? null : this.handleAddToCart}
           aria-label={`Add ${product.name} to cart`}
         >
           <ShoppingCart />

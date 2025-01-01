@@ -3,6 +3,7 @@ import { CiSquarePlus, CiSquareMinus } from "react-icons/ci";
 import CartAttributes from "./../CartAttributes"; // Assuming you have the ProductAttributes component
 import { Mutation } from "@apollo/client/react/components";
 import { CREATE_ORDER } from "./../mutation"; // Import the mutation
+import { MdDelete } from "react-icons/md";
 
 class CartOverlay extends Component {
   constructor(props) {
@@ -417,17 +418,24 @@ handlePlaceOrder = async (createOrder) => {
                     style={{ maxHeight: "120px" }}
                   />
                 </div>
+                <div className="flex flex-row">
+
                 <button
-                  className="text-xs mt-2"
+                  className="text-xs mt-2 text-red-400"
                   onClick={() =>
                     this.handleRemoveFromCart(
                       item.id,
                       item.selectedAttributes
                     )
                   }
-                >
-                  Remove
+                  >
+                  
+                    
+                    
+                    
+                  <MdDelete className="w-5 h-5 text-red-400"  />
                 </button>
+                  </div>
               </div>
             </div>
           ))}
