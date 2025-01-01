@@ -27,27 +27,6 @@ const Header = ({ onCategoryChange }) => {
     updateTotalItems();
   }, []);
 
-  // Listen to localStorage changes and update total items in real time
-  // useEffect(() => {
-  //   const handleStorageChange = () => {
-  //     updateTotalItems();
-  //   };
-
-  //   // Add event listener for `storage` changes
-  //   window.addEventListener('storage', handleStorageChange);
-
-  //   // Cleanup listener on unmount
-  //   return () => {
-  //     window.removeEventListener('storage', handleStorageChange);
-  //   };
-  //     // Listen for the custom event
-  // window.addEventListener("cartUpdated", handleCartUpdate);
-
-  // // Cleanup on unmount
-  // return () => {
-  //   window.removeEventListener("cartUpdated", handleCartUpdate);
-  // };
-  // }, []);
 // Listen to localStorage changes and custom events
 useEffect(() => {
   const handleStorageChange = () => {

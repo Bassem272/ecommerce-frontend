@@ -45,41 +45,6 @@ class CartAttributes extends Component {
     const { selectedAttributes } = this.state;
 
     return (
-      // <div >
-        
-      //   {attributes
-      //     .filter((attr) => this.isRelevantAttribute(attr.name))
-      //     .map((attr) => {
-      //       const kebabCaseName = attr.name.toLowerCase().replace(/\s+/g, '-');
-      //       return (
-      //         <div key={attr.id} className="my-4" data-testid={`cart-item-attribute-${kebabCaseName}`}>
-      //           <h3 className="mb-2 text-sm">{attr.name}</h3>
-      //           <div className="flex space-x-2">
-      //             {attr.attribute_items.map((item) => {
-      //               const isSelected = selectedAttributes[attr.name] === item.value;
-      //               return (
-      //                 <button
-      //                   key={item.id}
-      //                   onClick={() => this.handleAttributeClick(attr.name, item.value)}
-      //                   // className={`border px-2 py-1 text-sm ${isSelected ? 'border-blue-500' : ''}`}
-      //                   className={`border px-2 py-1 text-xs rounded ${isSelected ? 'border-blue-500 shadow-md' : 'border-gray-300 shadow-sm'}`} // Enhanced border and shadow
-
-      //                   style={
-      //                     attr.name.toLowerCase() === 'color'
-      //                       ? { backgroundColor: item.value, width: '30px', height: '30px' }
-      //                       : {}
-      //                   }
-      //                   data-testid={`cart-item-attribute-${kebabCaseName}-${item.value.toLowerCase().replace(/\s+/g, '-')}${isSelected ? '-selected' : ''}`}
-      //                 >
-      //                   {attr.name.toLowerCase() !== 'color' ? item.displayValue : ''}
-      //                 </button>
-      //               );
-      //             })}
-      //           </div>
-      //         </div>
-      //       );
-      //     })}
-      // </div>
       <div>
   {attributes
     .filter((attr) => this.isRelevantAttribute(attr.name))

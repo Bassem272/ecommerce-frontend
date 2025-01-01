@@ -36,11 +36,10 @@ class ProductCard extends Component {
     };
 
     // Add the product to the cart array
-    // cart.push(productToAdd);
+
     this.setState({ cartItems: cart });
-    // Save the updated cart to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
-    
+
     // Call the addToCart method passed from ProductListPage
     addToCart(productToAdd);
     console.log(`${product.name} added to cart`);
@@ -83,7 +82,7 @@ render() {
         <div
           className={`absolute bottom-2 right-2 bg-green-500 text-white rounded-full p-2 cursor-pointer
                       group-hover:opacity-100 transition-opacity duration-300 
-                      ${!product.inStock ?`opacity-50 cursor-not-allowed` :`opacity-0`}`}
+                     opacity-0`}
           onClick={!product.inStock? null : this.handleAddToCart}
           aria-label={`Add ${product.name} to cart`}
         >

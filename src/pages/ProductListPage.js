@@ -48,8 +48,6 @@ class ProductListPage extends Component {
     console.log("we are here list ")
 
     return (
-      // <div className="container mx-auto p-5">
-      //   <h1 className="text-5xl font-bold my-6 text-start ml-3">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold my-6 text-start ml-3">
   {activeCategory.toUpperCase()}
