@@ -11,7 +11,6 @@ class ProductCard extends Component {
       totalItems :0,
     };
   }
-  // Function to handle adding product to the cart
  // Function to handle adding product to the cart
  handleAddToCart = () => {
   const { product, addToCart } = this.props; // Destructure addToCart from props
@@ -23,7 +22,6 @@ class ProductCard extends Component {
       return; // Stop further execution
     }
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  console.log("productcard_handleaddcart", cart)
 
   // Check if the product already exists in the cart
   const productExists = cart.some(item => item.id === product.id);
@@ -36,7 +34,6 @@ class ProductCard extends Component {
     };
 
     // Add the product to the cart array
-
     this.setState({ cartItems: cart });
     localStorage.setItem('cart', JSON.stringify(cart));
 
@@ -80,24 +77,20 @@ render() {
 
         {/* Cart Icon (appears on hover) */}
         <div
-          className={`absolute bottom-2 right-2 bg-green-500 text-white rounded-full p-2 cursor-pointer
-                      group-hover:opacity-100 transition-opacity duration-300 
-                     opacity-0`}
+          className={`absolute bottom-2 right-2 text-white rounded-full p-2 cursor-pointer
+                      group-hover:opacity-100 transition-opacity duration-300 ${ product.inStock ? 'bg-green-500' : 'bg-black-600'} opacity-0`}
           onClick={!product.inStock? null : this.handleAddToCart}
           aria-label={`Add ${product.name} to cart`}
         >
           <ShoppingCart />
         </div>
       </div>
-
       {/* Product Name */}
       <h2 className="text-xl mt-2">{product.name}</h2>
-
       {/* Product Price */}
       <p className="text-gray-700">
         ${product.price[0].amount.toFixed(2)}
       </p>
-
     </div>
   );
 }
